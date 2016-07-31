@@ -18,3 +18,13 @@ C:\Users\Abhisheikh.parihar\Documents\RedisSizeCalculator\RedisSizeCalculator\bi
 C:\Users\Abhisheikh.parihar\Documents\RedisSizeCalculator\RedisSizeCalculator\bin\Debug\ServiceStack.Redis.dll
 C:\Users\Abhisheikh.parihar\Documents\RedisSizeCalculator\RedisSizeCalculator\bin\Debug\ServiceStack.Text.dll
 C:\Users\Abhisheikh.parihar\Documents\RedisSizeCalculator\RedisSizeCalculator\obj\Debug\RedisSizeCalculator.csprojResolveAssemblyReference.cache
+C:\git\github\RedisSizeCalculator\RedisSizeCalculator\bin\Debug\RedisSizeCalculator.exe
+C:\git\github\RedisSizeCalculator\RedisSizeCalculator\bin\Debug\RedisSizeCalculator.pdb
+C:\git\github\RedisSizeCalculator\RedisSizeCalculator\bin\Debug\Newtonsoft.Json.dll
+C:\git\github\RedisSizeCalculator\RedisSizeCalculator\bin\Debug\ServiceStack.Common.dll
+C:\git\github\RedisSizeCalculator\RedisSizeCalculator\bin\Debug\ServiceStack.Interfaces.dll
+C:\git\github\RedisSizeCalculator\RedisSizeCalculator\bin\Debug\ServiceStack.Redis.dll
+C:\git\github\RedisSizeCalculator\RedisSizeCalculator\bin\Debug\ServiceStack.Text.dll
+C:\git\github\RedisSizeCalculator\RedisSizeCalculator\obj\Debug\RedisSizeCalculator.csprojResolveAssemblyReference.cache
+C:\git\github\RedisSizeCalculator\RedisSizeCalculator\obj\Debug\RedisSizeCalculator.exe
+C:\git\github\RedisSizeCalculator\RedisSizeCalculator\obj\Debug\RedisSizeCalculator.pdb

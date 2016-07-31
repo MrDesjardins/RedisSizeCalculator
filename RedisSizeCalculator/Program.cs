@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using ServiceStack.Redis;
@@ -9,12 +10,15 @@ namespace RedisSizeCalculator
 {
     class Program
     {
-        public static string redisHost = "127.0.0.1"; //Provide your Redis Ip Here
-        public static string redisPort = "6379"; //Provide your Redis port Here
-        public static string FilePathToStoreResult = "D:\\TestRedisKeySize.txt"; // Provide the name and location of txt file in which you want to see keynames and sizes 
+        private const int BufferSize = 65536;  // 64 Kilobytes
+        private static string RedisHost = "127.0.0.1"; //Provide your Redis Ip Here
+        private static string RedisPort = "6379"; //Provide your Redis port Here
+        private static string FilePathToStoreResult = Environment.CurrentDirectory + @"\stats.csv"; 
+
         static void Main(string[] args)
         {
-            findlen();
+            File.Delete(FilePathToStoreResult);
+            WriteLenghtForEveryKeys();
         }
         static double ConvertBytesToMegabytes(long bytes)
         {
@@ -25,45 +29,37 @@ namespace RedisSizeCalculator
             return (bytes / 1024f);
         }
 
-        static void findlen()
+        static void WriteLenghtForEveryKeys()
         {          
-            using (var redisClient = new RedisClient(redisHost, Convert.ToInt16(redisPort)))
+            using (var redisClient = new RedisClient(RedisHost, Convert.ToInt16(RedisPort)))
             {               
-                double totalsize = 0;
                 var keys = redisClient.GetAllKeys();
-                foreach (string key in keys)
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(@FilePathToStoreResult, true, Encoding.UTF8, BufferSize))
                 {
-                    try
-                    { 
-                        byte[] bytarr = redisClient.Get(key);
-                        double kblen = ConvertBytesToKilobytes(bytarr.Length);
-                        double mblen = ConvertBytesToMegabytes(bytarr.Length);
-                        totalsize = totalsize + mblen;
-                        Console.WriteLine("Key Name : " + key + " Key length in MB : " + mblen + " Key Length in Kb : " + kblen);
-                        using (System.IO.StreamWriter file = new System.IO.StreamWriter(@FilePathToStoreResult, true))
-                        {
-                            file.WriteLine("Key Name : " + key + " Key length in MB : " + mblen + " Key Length in Kb : " + kblen);
-                        }
-                        
-                    }
-                    catch (Exception ex)
+                    foreach (string key in keys)
                     {
+                        long bytes;
                         try
                         {
-                            byte[][] bythsharr = redisClient.HGetAll(key);
-                            double kblen = ConvertBytesToKilobytes(bythsharr.Length);
-                            double mblen = ConvertBytesToMegabytes(bythsharr.Length);
-                            Console.WriteLine("Hash Key Name : " + key + " Key length in MB : " + mblen + " Key Length in Kb : " + kblen);
-                            using (System.IO.StreamWriter file =new System.IO.StreamWriter(@FilePathToStoreResult, true))
-                            {
-                                file.WriteLine("Hash Key Name : " + key + " Key length in MB : " + mblen + " Key Length in Kb : " + kblen);
-                            }
-                            totalsize = totalsize + mblen;
+                            byte[] bytarr = redisClient.Get(key);
+                            bytes = bytarr.Length;
                         }
-                        catch (Exception ex1)
+                        catch (Exception)
                         {
-
+                            try
+                            {
+                                byte[][] bythsharr = redisClient.HGetAll(key);
+                                bytes = bythsharr.Length;
+                            }
+                            catch (Exception)
+                            {
+                                bytes = 0;
+                            }
                         }
+                        double kblen = ConvertBytesToKilobytes(bytes);
+                        double mblen = ConvertBytesToMegabytes(bytes);
+                        var lineToOutput = $"{key},{mblen},{kblen}";
+                        file.WriteLine(lineToOutput);
                     }
                 }                
             }
